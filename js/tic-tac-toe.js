@@ -113,21 +113,20 @@ const gameController = (() => {
 
 const demo = gameController;
 // console.log(demo.board.getBoardState());
-demo.makeMove(0,0);
-demo.makeMove(0,1);
-demo.makeMove(0,2);
-demo.makeMove(1,0);
-demo.makeMove(1,2);
-demo.makeMove(1,1);
-demo.makeMove(2,1);
-demo.makeMove(2,2);
-demo.makeMove(2,0);
+// demo.makeMove(0,0);
+// demo.makeMove(0,1);
+// demo.makeMove(0,2);
+// demo.makeMove(1,0);
+// demo.makeMove(1,2);
+// demo.makeMove(1,1);
+// demo.makeMove(2,1);
+// demo.makeMove(2,2);
+// demo.makeMove(2,0);
 
 
 /* UI Controller object */
 function uiController () {
     const uiBoard = document.querySelector(".board");
-
     function displayBoard () {
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
@@ -136,13 +135,33 @@ function uiController () {
                 console.log(gameController.board.getToken(row, col));
                 cell.textContent = gameController.board.getToken(row, col);
                 cell.classList.add((cell.textContent === "X" ? "p1" : "p2"));
+                cell.setAttribute("data-row", String(row));
+                cell.setAttribute("data-col", String(col));
                 uiBoard.appendChild(cell);
             } 
         }
     }
 
-    return {displayBoard};
+    function resetBoard () {
+        uiBoard.innerHTML = "";
+    }
+
+    function renderMove (event) {
+        if (event.target.closest(".cell")) {
+            const cell = event.target.closest(".cell");
+            const row = cell.dataset.row;
+            const col = cell.dataset.col;
+
+            gameController.makeMove(Number(row), Number(col));
+            resetBoard();
+            displayBoard();
+        }
+    }
+
+    // uiBoard.addEventListener("click", renderMove);
+    return {displayBoard, uiBoard, renderMove};
 }
 
 const demoUI = uiController ();
 demoUI.displayBoard();
+demoUI.uiBoard.addEventListener("click", demoUI.renderMove)
