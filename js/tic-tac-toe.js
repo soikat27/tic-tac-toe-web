@@ -41,7 +41,7 @@ function player (name, token) {
 }
 
 /* GameController Object */
-function gameController () {
+const gameController = (() => {
     const board = gameBoard(3, 3);
     const boardState = board.getBoardState();
     const players = [player("player 1", "X"), player("player 2", "O")];
@@ -51,10 +51,14 @@ function gameController () {
         if (!board.isEmpty(row, col))
             return;
         board.placeToken(row, col, currentPlayer.getToken());
-        if (isGameOver()) {
-            const message = isWin() ? `The winner is  ${currentPlayer.getName()}` : "Tie!";
+
+        const win = isWin();
+        const tie = isTie();
+        if (win || tie) {
+            const message = win ? `The winner is  ${currentPlayer.getName()}` : "Tie!";
             console.log(`The game is over! ${message}`);
         }
+
         switchPlayer();  
     }
 
@@ -96,12 +100,4 @@ function gameController () {
     }
 
     return {boardState, makeMove};
-}
-
-const demo = gameController();
-console.log(demo.boardState);
-demo.makeMove(0,0);
-demo.makeMove(2,0);
-demo.makeMove(1,1);
-demo.makeMove(1,0);
-demo.makeMove(2,2);
+})();
