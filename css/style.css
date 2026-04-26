@@ -1,0 +1,133 @@
+:root {
+    --bg-color: #120b3d;
+    --bg-color-soft: #171047;
+    --border-color: #4b4186;
+    --border-color-soft: #6f66aa;
+    --text-main: #e9edff;
+    --text-muted: #c1bcde;
+    --text-color-p1: #13facd;
+    --text-color-p2: #ffd568;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-main);
+    background: var(--bg-color);
+}
+
+.main {
+    width: min(92vw, 26.5rem);
+    display: grid;
+    justify-items: center;
+    gap: 0.95rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    color: var(--text-main);
+}
+
+.subtitle {
+    margin: 0.28rem 0 0;
+    font-size: 0.84rem;
+    color: var(--text-muted);
+}
+
+.board-wrap {
+    width: 100%;
+    border: 1px solid var(--border-color-soft);
+    border-radius: 0.85rem;
+    padding: 0.85rem;
+    background: rgba(22, 15, 64, 0.55);
+}
+
+.board {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.55rem;
+}
+
+.cell {
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 0.3rem;
+    background: rgba(18, 11, 61, 0.35);
+    font-size: 3rem;
+    font-weight: 700;
+    user-select: none;
+}
+
+.players {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+}
+
+.player-card {
+    border-radius: 0.7rem;
+    padding: 0.72rem 0.6rem;
+    background: rgba(21, 14, 60, 0.55);
+    text-align: center;
+}
+
+.player-card h3 {
+    margin: 0 0 0.45rem;
+    font-size: 0.84rem;
+    font-weight: 650;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.p1 {
+    color: var(--text-color-p1);
+}
+
+.p2 {
+    color: var(--text-color-p2);
+}
+
+.player-meta {
+    display: grid;
+    justify-items: center;
+    gap: 0.28rem;
+}
+
+.player-meta p {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.player-meta .label {
+    color: var(--text-main);
+}
+
+.player-meta .value {
+    font-weight: 600;
+}
+
+.p1 .player-meta .value {
+    color: var(--text-color-p1);
+}
+
+.p2 .player-meta .value {
+    color: var(--text-color-p2);
+}
