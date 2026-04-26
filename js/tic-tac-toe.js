@@ -16,7 +16,7 @@ function gameBoard (row = 3, col = 3) {
         return boardState[row][col] === "";
     }
 
-    function placeMove (row, col, token) {
+    function placeToken (row, col, token) {
         boardState[row][col] = token;
     }
 
@@ -24,7 +24,7 @@ function gameBoard (row = 3, col = 3) {
         return boardState;
     }
 
-    return {isEmpty, placeMove, getBoardState};
+    return {isEmpty, placeToken, getBoardState};
 }
 
 /* Player Object */
@@ -39,3 +39,69 @@ function player (name, token) {
 
     return {getName, getToken};
 }
+
+/* GameController Object */
+function gameController () {
+    const board = gameBoard(3, 3);
+    const boardState = board.getBoardState();
+    const players = [player("player 1", "X"), player("player 2", "O")];
+    let currentPlayer = players[0];
+
+    function makeMove (row, col) {
+        if (!board.isEmpty(row, col))
+            return;
+        board.placeToken(row, col, currentPlayer.getToken());
+        if (isGameOver()) {
+            const message = isWin() ? `The winner is  ${currentPlayer.getName()}` : "Tie!";
+            console.log(`The game is over! ${message}`);
+        }
+        switchPlayer();  
+    }
+
+    function switchPlayer () {
+        currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+    }
+
+    function isGameOver () {
+        if (isWin() || isTie()) {
+            return true
+        }
+        return false;
+    }
+
+    function isWin () {
+        const curToken = currentPlayer.getToken();
+
+        if ((boardState[0][0] === curToken && boardState[0][1] === curToken && boardState[0][2] === curToken) ||
+            (boardState[1][0] === curToken && boardState[1][1] === curToken && boardState[1][2] === curToken) ||
+            (boardState[2][0] === curToken && boardState[2][1] === curToken && boardState[2][2] === curToken) ||
+            (boardState[0][0] === curToken && boardState[1][0] === curToken && boardState[2][0] === curToken) ||
+            (boardState[0][1] === curToken && boardState[1][1] === curToken && boardState[2][1] === curToken) ||
+            (boardState[0][2] === curToken && boardState[1][2] === curToken && boardState[2][2] === curToken) ||
+            (boardState[0][0] === curToken && boardState[1][1] === curToken && boardState[2][2] === curToken) ||
+            (boardState[0][2] === curToken && boardState[1][1] === curToken && boardState[2][0] === curToken))
+            return true;
+        
+        return false;
+    }
+
+    function isTie () {
+        for (let row = 0; row < 3; row++) {
+            for (let col = 0; col < 3; col++) {
+                if (board.isEmpty(row, col))
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    return {boardState, makeMove};
+}
+
+const demo = gameController();
+console.log(demo.boardState);
+demo.makeMove(0,0);
+demo.makeMove(2,0);
+demo.makeMove(1,1);
+demo.makeMove(1,0);
+demo.makeMove(2,2);
