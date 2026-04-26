@@ -26,3 +26,16 @@ function gameBoard (row = 3, col = 3) {
 
     return {isEmpty, placeMove, getBoardState};
 }
+
+/* Player Object */
+function player (name, token) {
+    function getName () {
+        return name;
+    }
+
+    function getToken () {
+        return token;
+    }
+
+    return {getName, getToken};
+}
