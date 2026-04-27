@@ -3,6 +3,11 @@ function gameBoard (row = 3, col = 3) {
     const boardState = [];
 
     function initializeGameBoard () {
+        reset();
+    }
+    initializeGameBoard ();
+
+    function reset () {
         for (let i = 0; i < row; i++) {
             boardState[i] = [];
             for (let j = 0; j < col; j++) {
@@ -10,7 +15,6 @@ function gameBoard (row = 3, col = 3) {
             }
         }
     }
-    initializeGameBoard();
 
     function isEmpty (row, col) {
         return boardState[row][col] === "";
@@ -28,7 +32,7 @@ function gameBoard (row = 3, col = 3) {
         return boardState;
     }
 
-    return {isEmpty, placeToken, getToken};
+    return {isEmpty, placeToken, getToken, reset};
 }
 
 /* Player Object */
@@ -164,18 +168,29 @@ const uiController = (() => {
         render();
     }
 
-    function setEventListenersToCells () {
+    function setEventListeners () {
         uiBoard.addEventListener("click", renderMove);
+
+        const clearBtn = document.querySelector(".clear-btn");
+        clearBtn.addEventListener("click", function () {
+            board.reset();
+            render();
+        });
+        const newGameBtn = document.querySelector(".new-game-btn");
+        newGameBtn.addEventListener("click", initializeGame);
+    }
+
+    function getPlayersNames () {
+        const nameDialog = document.querySelector("#name");
+        nameDialog.showModal();
     }
 
     function initializeGame () {
-        const nameDialog = document.querySelector("#name");
-        const form       = nameDialog.querySelector("form");
-
-        nameDialog.showModal();
+        getPlayersNames();
+        const form = document.querySelector("form");
         form.addEventListener("submit", setGameStage);
         
-        setEventListenersToCells();
+        setEventListeners();
     }
 
     function setGameStage (event) {
