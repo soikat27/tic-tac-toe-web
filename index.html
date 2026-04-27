@@ -11,8 +11,26 @@
 <body>
     <div class="main">
         <div class="header">
+            <!-- Enter player's name: -->
+            <dialog id="name">
+                <h2>TIC-TAC-TOE</h2>
+                <p>Enter player's name to begin</p>
+
+                <form>
+                    <div class="name-p1">
+                        <label for="player1">Player 1 (X)</label>
+                        <input type="text" id="player1" name="player1" placeholder="Ex: Jim" required>
+                    </div>
+                    <div class="name-p2">
+                        <label for="player2">Player 2 (O)</label>
+                        <input type="text" id="player2" name="player2" placeholder="Ex: Pam" required>
+                    </div>
+                    <button type="submit">Start Game</button>
+                </form>
+            </dialog>
+
             <h1>Tic-Tac-Toe</h1>
-            <p class="subtitle">Line up 3 markers to win</p>
+            <p class="subtitle">Line up 3 markers to win!</p>
         </div>
         <div class="players">
             <div class="player-card p1">

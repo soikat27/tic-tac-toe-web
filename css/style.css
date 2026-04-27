@@ -131,3 +131,109 @@ h1 {
 .p2 .player-meta .value {
     color: var(--text-color-p2);
 }
+
+#name {
+    width: min(90vw, 26rem);
+    border: 1px solid var(--border-color-soft);
+    border-radius: 1rem;
+    padding: 2.7rem 2.35rem 2.2rem;
+    background: linear-gradient(180deg, rgba(23, 16, 71, 0.98), rgba(18, 11, 61, 0.98));
+    color: var(--text-main);
+    box-shadow: 0 16px 48px rgba(5, 3, 18, 0.6);
+}
+
+#name::backdrop {
+    background: rgba(6, 4, 24, 0.72);
+    backdrop-filter: blur(3px);
+}
+
+#name h2 {
+    margin: 0;
+    text-align: center;
+    color: var(--text-main);
+    font-size: 1.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+#name p {
+    margin: 0.9rem 0 1.95rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+#name form {
+    display: grid;
+    gap: 1.55rem;
+}
+
+#name form > div {
+    display: grid;
+    gap: 0.55rem;
+}
+
+#name label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-main);
+    justify-self: start;
+    text-align: left;
+    opacity: 0.72;
+}
+
+#name .name-p1 label {
+    color: var(--text-color-p1);
+}
+
+#name .name-p2 label {
+    color: var(--text-color-p2);
+}
+
+#name input {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 0.55rem;
+    padding: 0.95rem 0.95rem;
+    background: rgba(17, 12, 52, 0.85);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    outline: none;
+}
+
+#name input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+#name input:focus {
+    border-color: var(--border-color-soft);
+    box-shadow: 0 0 0 3px rgba(111, 102, 170, 0.2);
+}
+
+#name button {
+    margin-top: 0.95rem;
+    border: 1px solid var(--border-color-soft);
+    border-radius: 0.55rem;
+    padding: 1rem 1.05rem;
+    background: rgba(22, 15, 64, 0.9);
+    color: var(--text-main);
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+#name button:hover {
+    border-color: var(--text-color-p1);
+    background: rgba(22, 15, 64, 1);
+    color: #f3f6ff;
+}
+
+#name button:active {
+    border-color: var(--border-color-soft);
+    background: rgba(18, 12, 56, 0.95);
+}
