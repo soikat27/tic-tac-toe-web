@@ -48,12 +48,14 @@ function player (name, marker) {
 const gameController = (() => {
     const board = gameBoard(3, 3);
     const players = [];
-    setPlayers();
-    let currentPlayer = players[0];
+    // setPlayers();
+    let currentPlayer;
 
     function setPlayers (player1 = "Player 1", player2 = "Player 2") {
         players[0] = player(player1, "X");
         players[1] = player(player2, "O");
+
+        currentPlayer = players[0];
     }
     
     function makeMove (row, col) {
@@ -108,16 +110,13 @@ const gameController = (() => {
         return true;
     }
 
-    return {board, currentPlayer, makeMove};
+    return {board, currentPlayer, makeMove, setPlayers};
 })();
 
 /* UI Controller object */
 const uiController = (() => {
     const board = gameController.board;
     const uiBoard = document.querySelector(".board");
-
-    const nameDialog = document.querySelector("#name");
-    const nameButton = nameDialog.querySelector("button");
 
     function displayBoard () {
         for (let row = 0; row < 3; row++) {
@@ -165,19 +164,42 @@ const uiController = (() => {
         render();
     }
 
-    function setEventListeners () {
+    function setEventListenersToCells () {
         uiBoard.addEventListener("click", renderMove);
-        nameButton.addEventListener("submit", )
     }
 
-    function getNameInput () {
+    function initializeGame () {
+        const nameDialog = document.querySelector("#name");
+        const form       = nameDialog.querySelector("form");
+
         nameDialog.showModal();
-
-
+        form.addEventListener("submit", setGameStage);
+        
+        setEventListenersToCells();
     }
 
-    // initial render
-    getNameInput();
-    displayBoard ();
-    setEventListeners();
+    function setGameStage (event) {
+        event.preventDefault();
+
+        const nameDialog = document.querySelector("#name");
+        const form       = nameDialog.querySelector("form");
+        
+        const player1Name = form.querySelector("#player1").value;
+        const player2Name = form.querySelector("#player2").value;
+
+        const p1NameUI = document.querySelector(".p1-name");
+        p1NameUI.textContent = player1Name;
+        const p2NameUI = document.querySelector(".p2-name");
+        p2NameUI.textContent = player2Name;
+
+        gameController.setPlayers(player1Name, player2Name);
+
+        form.reset();
+        nameDialog.close();
+
+        render();
+    }
+
+    // start game
+    initializeGame();
 })();
