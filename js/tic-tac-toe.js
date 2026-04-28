@@ -61,6 +61,15 @@ const gameController = (() => {
 
         currentPlayer = players[0];
     }
+
+    function getCurrentPlayer () {
+        return currentPlayer;
+    }
+
+    function resetGame () {
+        board.reset();
+        currentPlayer = players[0];
+    }
     
     function makeMove (row, col) {
         if (isGameOver())
@@ -111,7 +120,7 @@ const gameController = (() => {
         return true;
     }
 
-    return {board, currentPlayer, makeMove, setPlayers, isWin, isTie, isGameOver};
+    return {board, getCurrentPlayer, makeMove, setPlayers, isWin, isTie, isGameOver, resetGame};
 })();
 
 /* UI Controller object */
@@ -143,12 +152,8 @@ const uiController = (() => {
         }
     }
 
-    function resetBoard () {
-        uiBoard.innerHTML = "";
-    }
-
     function render() {
-        resetBoard();
+        uiBoard.innerHTML = "";
         displayBoard();
     }
 
@@ -164,9 +169,8 @@ const uiController = (() => {
         gameController.makeMove(row, col);
         render();
 
-        // if (gameController.isGameOver())
-        //     showGameResult();
-        
+        if (gameController.isGameOver())
+            showGameResult();
     }
 
     function setEventListeners () {
@@ -174,23 +178,22 @@ const uiController = (() => {
 
         const clearBtn = document.querySelector(".clear-btn");
         clearBtn.addEventListener("click", function () {
-            board.reset();
+            gameController.resetGame();
             render();
         });
         const newGameBtn = document.querySelector(".new-game-btn");
         newGameBtn.addEventListener("click", initializeGame);
 
         const gameEndMsg = document.querySelector(".new-round");
-        gameEndMsg.addEventListener("click", initializeGame);
-    }
-
-    function getPlayersNames () {
-        const nameDialog = document.querySelector("#name");
-        nameDialog.showModal();
+        gameEndMsg.addEventListener("click", function () {
+            document.querySelector("#game-end-msg").close();
+            gameController.resetGame();
+            render();
+        });
     }
 
     function initializeGame () {
-        getPlayersNames();
+        document.querySelector("#name").showModal();
         const form = document.querySelector("form");
         form.addEventListener("submit", setGameStage);
         
@@ -220,12 +223,11 @@ const uiController = (() => {
     }
 
     function showGameResult () {
+
         // check if game is over
-        // const msgTitle = document.querySelector("dialog#game-end-msg h2");
-        // const gameOverDialog = document.querySelector("#game-end-msg");
-        
-        // let message = "The game is over! " + gameController.isWin() ? `The winner is  ${gameController.currentPlayer.getName()}` : "Tie!";
-        // gameOverDialog.showModal();
+        const msgTitle = document.querySelector("dialog#game-end-msg h2");
+        const message = "The game is over! " + (gameController.isWin() ? `The winner is  ${gameController.getCurrentPlayer().getName()} 🎉` : "Tie!");
+        msgTitle.textContent = message;
 
         document.querySelector("#game-end-msg").showModal();
     }

@@ -171,7 +171,7 @@ h1 {
     color: var(--text-color-p2);
 }
 
-#name {
+#name, #game-end-msg {
     width: min(90vw, 26rem);
     border: 1px solid var(--border-color-soft);
     border-radius: 1rem;
@@ -181,18 +181,34 @@ h1 {
     box-shadow: 0 16px 48px rgba(5, 3, 18, 0.6);
 }
 
-#name::backdrop {
+#name::backdrop, #game-end-msg::backdrop {
     background: rgba(6, 4, 24, 0.72);
     backdrop-filter: blur(3px);
 }
 
-#name h2 {
+#name h2, #game-end-msg h2 {
     margin: 0;
     text-align: center;
     color: var(--text-main);
     font-size: 1.55rem;
-    letter-spacing: 0.12em;
     text-transform: uppercase;
+}
+
+#name h2 {
+    letter-spacing: 0.12em;
+}
+
+#game-end-msg {
+    text-align: center;
+}
+
+#game-end-msg h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    margin-bottom: 0.8rem;
 }
 
 #name p {
@@ -252,7 +268,7 @@ h1 {
     box-shadow: 0 0 0 3px rgba(111, 102, 170, 0.2);
 }
 
-#name button {
+#name button, #game-end-msg button {
     margin-top: 0.95rem;
     border: 1px solid var(--border-color-soft);
     border-radius: 0.55rem;
@@ -266,13 +282,13 @@ h1 {
     cursor: pointer;
 }
 
-#name button:hover {
+#name button:hover, #game-end-msg button:hover {
     border-color: var(--text-color-p1);
     background: rgba(22, 15, 64, 1);
     color: #f3f6ff;
 }
 
-#name button:active {
+#name button:active, #game-end-msg button:active {
     border-color: var(--border-color-soft);
     background: rgba(18, 12, 56, 0.95);
 }
