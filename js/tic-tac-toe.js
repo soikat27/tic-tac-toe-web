@@ -63,18 +63,14 @@ const gameController = (() => {
     }
     
     function makeMove (row, col) {
+        if (isGameOver())
+            return;
         if (!board.isEmpty(row, col))
             return;
+        
         board.placeToken(row, col, currentPlayer.getMarker());
-
-        const win = isWin();
-        const tie = isTie();
-        if (win || tie) {
-            const message = win ? `The winner is  ${currentPlayer.getName()}` : "Tie!";
-            console.log(`The game is over! ${message}`);
-        }
-
-        switchPlayer();  
+        if (!isGameOver())
+            switchPlayer();  
     }
 
     function switchPlayer () {
@@ -82,8 +78,9 @@ const gameController = (() => {
     }
 
     function isGameOver () {
+
         if (isWin() || isTie()) {
-            return true
+            return true;
         }
         return false;
     }
@@ -114,7 +111,7 @@ const gameController = (() => {
         return true;
     }
 
-    return {board, currentPlayer, makeMove, setPlayers};
+    return {board, currentPlayer, makeMove, setPlayers, isWin, isTie, isGameOver};
 })();
 
 /* UI Controller object */
@@ -166,6 +163,10 @@ const uiController = (() => {
 
         gameController.makeMove(row, col);
         render();
+
+        // if (gameController.isGameOver())
+        //     showGameResult();
+        
     }
 
     function setEventListeners () {
@@ -178,6 +179,9 @@ const uiController = (() => {
         });
         const newGameBtn = document.querySelector(".new-game-btn");
         newGameBtn.addEventListener("click", initializeGame);
+
+        const gameEndMsg = document.querySelector(".new-round");
+        gameEndMsg.addEventListener("click", initializeGame);
     }
 
     function getPlayersNames () {
@@ -213,6 +217,17 @@ const uiController = (() => {
         nameDialog.close();
 
         render();
+    }
+
+    function showGameResult () {
+        // check if game is over
+        // const msgTitle = document.querySelector("dialog#game-end-msg h2");
+        // const gameOverDialog = document.querySelector("#game-end-msg");
+        
+        // let message = "The game is over! " + gameController.isWin() ? `The winner is  ${gameController.currentPlayer.getName()}` : "Tie!";
+        // gameOverDialog.showModal();
+
+        document.querySelector("#game-end-msg").showModal();
     }
 
     // start game
