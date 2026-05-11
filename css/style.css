@@ -1,3 +1,6 @@
+/*
+ * Centralized palette
+ */
 :root {
     --bg-color: #120b3d;
     --bg-color-soft: #171047;
@@ -9,6 +12,10 @@
     --text-color-p2: #ffd568;
 }
 
+
+/* Base layout
+ * Full-viewport canvas; the game is centered both horizontally and vertically.
+ */
 body {
     margin: 0;
     height: 100vh;
@@ -26,6 +33,9 @@ body {
     gap: 0.95rem;
 }
 
+/* Header
+ * Title + subtitle.
+ */
 .header {
     text-align: center;
     margin-bottom: 1rem;
@@ -45,6 +55,7 @@ h1 {
     color: var(--text-muted);
 }
 
+/* Game board */
 .board-wrap {
     width: 100%;
     border: 1px solid var(--border-color-soft);
@@ -53,6 +64,7 @@ h1 {
     background: rgba(22, 15, 64, 0.55);
 }
 
+/* Action buttons: Clear Board / New Game */
 .game-actions {
     width: 100%;
     display: grid;
@@ -111,6 +123,7 @@ h1 {
     transform: scale(0.99);
 }
 
+/* Player cards */
 .players {
     width: 100%;
     display: grid;
@@ -171,6 +184,7 @@ h1 {
     color: var(--text-color-p2);
 }
 
+/* Dialogs */
 #name, #game-end-msg {
     width: min(90vw, 26rem);
     border: 1px solid var(--border-color-soft);

@@ -1,11 +1,12 @@
-/* GameBoard object */
+/* 
+   GameBoard factory
+
+   Creates and manages the internal 3x3 board state.
+   The board array stays private inside the closure, and only a small
+   public API is returned for reading, placing, and resetting tokens.
+*/
 function gameBoard (row = 3, col = 3) {
     const boardState = [];
-
-    function initializeGameBoard () {
-        reset();
-    }
-    initializeGameBoard ();
 
     function reset () {
         for (let i = 0; i < row; i++) {
@@ -15,6 +16,7 @@ function gameBoard (row = 3, col = 3) {
             }
         }
     }
+    reset();
 
     function isEmpty (row, col) {
         return boardState[row][col] === "";
@@ -28,14 +30,16 @@ function gameBoard (row = 3, col = 3) {
         boardState[row][col] = token;
     }
 
-    function getBoardState () { 
-        return boardState;
-    }
-
-    return {isEmpty, placeToken, getToken, reset};
+    return {reset, isEmpty, getToken, placeToken};
 }
 
-/* Player Object */
+/* 
+   Player factory
+
+   Stores each player's name and marker.
+   The values are kept private and exposed through getter methods so the
+   rest of the app can read player data without directly mutating it.
+*/
 function player (name, marker) {
     function getName () {
         return name;
@@ -48,11 +52,18 @@ function player (name, marker) {
     return {getName, getMarker};
 }
 
-/* GameController Object */
+/*
+   GameController module
+
+   Coordinates the main game flow: player setup, turn management,
+   move validation, win/tie detection, and board resets.
+   This is an IIFE because the app only needs one active game controller.
+   Internal state such as the board, players, and current player stays private,
+   while the returned methods provide a focused public API for the UI layer.
+*/
 const gameController = (() => {
     const board = gameBoard(3, 3);
     const players = [];
-    // setPlayers();
     let currentPlayer;
 
     function setPlayers (player1 = "Player 1", player2 = "Player 2") {
@@ -62,38 +73,38 @@ const gameController = (() => {
         currentPlayer = players[0];
     }
 
-    function getCurrentPlayer () {
-        return currentPlayer;
+    function switchPlayer () {
+        currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
     }
 
     function resetGame () {
         board.reset();
         currentPlayer = players[0];
     }
+
+    function getToken(row, col) {
+        return board.getToken(row, col);
+    }
     
     function makeMove (row, col) {
-        if (isGameOver())
-            return;
-        if (!board.isEmpty(row, col))
-            return;
+        if (getGameResult() !== "active" || !board.isEmpty(row, col)) return;
         
+        // place token on the board
         board.placeToken(row, col, currentPlayer.getMarker());
-        if (!isGameOver())
+
+        if (getGameResult() === "active")
             switchPlayer();  
     }
 
-    function switchPlayer () {
-        currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+    function getGameResult () {
+        if (isWin())
+            return "win";
+        else if (isTie())
+            return "tie";
+        else
+            return "active";
     }
-
-    function isGameOver () {
-
-        if (isWin() || isTie()) {
-            return true;
-        }
-        return false;
-    }
-
+    
     function isWin () {
         const curToken = currentPlayer.getMarker();
 
@@ -120,18 +131,30 @@ const gameController = (() => {
         return true;
     }
 
-    return {board, getCurrentPlayer, makeMove, setPlayers, isWin, isTie, isGameOver, resetGame};
+    function getWinnerName () {
+        return currentPlayer.getName();
+    }
+
+    return {setPlayers, resetGame, getToken, makeMove, getGameResult, getWinnerName};
 })();
 
-/* UI Controller object */
+/*
+   UIController IIFE module
+   
+   Handles all DOM-related work for the game: rendering the board,
+   responding to button/cell clicks, collecting player names, and showing
+   end-of-round messages.
+   The UI layer does not modify the board directly. Instead, it communicates
+   through the GameController's public methods so game rules and display logic
+   stay separated.
+*/
 const uiController = (() => {
-    const board = gameController.board;
     const uiBoard = document.querySelector(".board");
 
     function displayBoard () {
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
-                const cellValue = board.getToken(row, col);
+                const cellValue = gameController.getToken(row, col);
 
                 const cell = document.createElement("div");
                 cell.classList.add("cell");
@@ -169,12 +192,15 @@ const uiController = (() => {
         gameController.makeMove(row, col);
         render();
 
-        if (gameController.isGameOver())
+        if (gameController.getGameResult() !== "active")
             showGameResult();
     }
 
     function setEventListeners () {
         uiBoard.addEventListener("click", renderMove);
+
+        const form = document.querySelector("form");
+        form.addEventListener("submit", setGameStage);
 
         const clearBtn = document.querySelector(".clear-btn");
         clearBtn.addEventListener("click", function () {
@@ -182,22 +208,18 @@ const uiController = (() => {
             render();
         });
         const newGameBtn = document.querySelector(".new-game-btn");
-        newGameBtn.addEventListener("click", initializeGame);
+        newGameBtn.addEventListener("click", function () {
+            gameController.resetGame();
+            render();
+            initializeGame();
+        });
 
-        const gameEndMsg = document.querySelector(".new-round");
-        gameEndMsg.addEventListener("click", function () {
+        const newRoundBtn = document.querySelector(".new-round");
+        newRoundBtn.addEventListener("click", function () {
             document.querySelector("#game-end-msg").close();
             gameController.resetGame();
             render();
         });
-    }
-
-    function initializeGame () {
-        document.querySelector("#name").showModal();
-        const form = document.querySelector("form");
-        form.addEventListener("submit", setGameStage);
-        
-        setEventListeners();
     }
 
     function setGameStage (event) {
@@ -223,15 +245,22 @@ const uiController = (() => {
     }
 
     function showGameResult () {
+        const result = gameController.getGameResult();
 
-        // check if game is over
         const msgTitle = document.querySelector("dialog#game-end-msg h2");
-        const message = "The game is over! " + (gameController.isWin() ? `The winner is  ${gameController.getCurrentPlayer().getName()} 🎉` : "Tie!");
+        const message = result === "win"
+            ? `The game is over! The winner is ${gameController.getWinnerName()}! 🎉`
+            : "The game is over! It's a tie!";
         msgTitle.textContent = message;
 
         document.querySelector("#game-end-msg").showModal();
     }
 
+    function initializeGame () {
+        document.querySelector("#name").showModal();
+    }
+
     // start game
+    setEventListeners();
     initializeGame();
 })();
